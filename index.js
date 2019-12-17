@@ -1,36 +1,15 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import SeasonDisplay from './SeasonDisplay';
-import LoadIcon from './LoadIcon';
+import React from 'react'
+import { render } from 'react-dom'
+import { Provider } from 'react-redux'
+import { createStore } from 'redux'
+import todoApp from './reducers'
+import App from './components/App'
 
+const store = createStore(todoApp)
 
-class App extends React.Component{
-    state = {lat : null , errMessage : ""};
-
-    componentDidMount() {
-        window.navigator.geolocation.getCurrentPosition(
-            (position) => {
-                this.setState({lat : position.coords.latitude});
-            },
-            (err) => {
-                this.setState({errMessage : err.message});
-            }
-            );
-    }
-    render() {
-        if(this.state.lat && !this.state.errMessage) {
-             return <SeasonDisplay lat={this.state.lat} />
-        }
-
-        if(!this.state.lat && this.state.errMessage) {
-            return <div>Error: {this.state.errMessage}</div>
-        }
-        
-        return <div><LoadIcon  /></div>
-    
-    }
-
-} 
-
-ReactDOM.render(<App /> , document.getElementById("root"));
-
+render(
+  <Provider store={store}>
+    <App />
+  </Provider>,
+  document.getElementById('root')
+)
